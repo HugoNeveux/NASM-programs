@@ -11,11 +11,13 @@ input_msg	DB	"Please enter a number : ", 0h
 finish_msg	DB	"Congratulations ! The unknown number was ", 0h
 more_msg	DB	"My number is bigger than your input !", 0h
 less_msg	DB	"My number is smaller than your input !", 0h
+counter_msg	DB	"Number of tries before finding the number : ", 0h
 
 section .bss
 user_input_ascii:	resb	255
 user_input:	resq	1
 unknown_nb: 	resq 	1
+counter:	resb	1
 
 section .text
 global _start
@@ -29,8 +31,14 @@ _start:
 	call 	rand
 	mov 	[unknown_nb], al
 	xor 	eax, eax
+
 	
 input:
+	; Incerase counter
+	mov	dl, [counter]
+	inc 	dl
+	mov	[counter], dl
+
 	; Printing input 
 	mov	eax, input_msg
 	call 	sprintLF
@@ -67,6 +75,14 @@ finish:
 
 	mov	eax, [unknown_nb]
 	call	iprintLF
+
+	; Show number of tries
+	mov 	eax, counter_msg
+	call 	sprint
+	
+	xor	eax, eax
+	mov 	eax, [counter] 
+	call 	iprintLF
 
 	call 	quit
 

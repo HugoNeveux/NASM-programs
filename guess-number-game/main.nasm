@@ -97,7 +97,7 @@ continue:
 	int 	80h
 
 	; Print user_input_ascii content
-	mov	eax, user_input_ascii
+	mov	eax, [user_input_ascii]
 	call 	iprintLF
 	
 	; Compare input

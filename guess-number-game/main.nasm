@@ -12,6 +12,7 @@ finish_msg	DB	"Congratulations ! The unknown number was ", 0h
 more_msg	DB	"My number is bigger than your input !", 0h
 less_msg	DB	"My number is smaller than your input !", 0h
 counter_msg	DB	"Number of tries before finding the number : ", 0h
+retry_msg 	DB	"Would you like to continue playing ? [y/n] ", 0h
 
 section .bss
 user_input_ascii:	resb	255
@@ -44,7 +45,7 @@ input:
 	call 	sprintLF
 
 	; Reading user input
-	mov 	edx, 255
+	mov 	edx, 255 
 	mov 	ecx, user_input_ascii
 	mov 	ebx, 0
 	mov 	eax, 3
@@ -83,6 +84,27 @@ finish:
 	xor	eax, eax
 	mov 	eax, [counter] 
 	call 	iprintLF
+
+continue:
+	mov 	eax, retry_msg
+	call 	sprint
+
+	; Reading user input
+	mov 	edx, 255 
+	mov 	ecx, user_input_ascii
+	mov 	ebx, 0
+	mov 	eax, 3
+	int 	80h
+
+	; Print user_input_ascii content
+	mov	eax, user_input_ascii
+	call 	iprintLF
+	
+	; Compare input
+	mov	eax, [user_input_ascii]
+	mov 	ebx, "y"
+	cmp 	eax, ebx
+	je 	_start
 
 	call 	quit
 
